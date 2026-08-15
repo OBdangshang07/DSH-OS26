@@ -26,14 +26,25 @@ export function StatusOverlay({ signalStore, configStore }) {
   const config = useStore(configStore)
   if (!config.enabled) return null
   const copy = STATE_COPY[signal.state] ?? STATE_COPY.idle
-  const expanded = ['tool-running', 'approval', 'blocked', 'error'].includes(signal.state)
+  const nativeDecision = signal.state === 'approval' || signal.state === 'blocked'
+  const expanded = ['tool-running', 'error'].includes(signal.state)
 
   return h('div', { className: 'os26-overlay-stack', 'data-state': signal.state },
-    config.quality === 'cinematic' && h('svg', { className: 'os26-filter-defs', 'aria-hidden': 'true' },
-      h('filter', { id: 'os26-fluid-optic', x: '-30%', y: '-30%', width: '160%', height: '160%' },
+    h('svg', { className: 'os26-filter-defs', 'aria-hidden': 'true' },
+      h('filter', { id: 'os26-composer-refraction', x: '-8%', y: '-16%', width: '116%', height: '132%', colorInterpolationFilters: 'sRGB' },
+        h('feTurbulence', { type: 'fractalNoise', baseFrequency: '.006 .018', numOctaves: '1', seed: '26', result: 'lensNoise' }),
+        h('feGaussianBlur', { in: 'lensNoise', stdDeviation: '1.15', result: 'softLensNoise' }),
+        h('feDisplacementMap', { in: 'SourceGraphic', in2: 'softLensNoise', scale: '9', xChannelSelector: 'R', yChannelSelector: 'B' })),
+      config.quality === 'cinematic' && h('filter', { id: 'os26-fluid-optic', x: '-30%', y: '-30%', width: '160%', height: '160%' },
         h('feTurbulence', { type: 'fractalNoise', baseFrequency: '.018 .032', numOctaves: '2', seed: '26', result: 'noise' }),
         h('feDisplacementMap', { in: 'SourceGraphic', in2: 'noise', scale: '5', xChannelSelector: 'R', yChannelSelector: 'B' }))),
-    h('section', {
+    nativeDecision && h('section', {
+      className: 'os26-native-decision-announcer',
+      role: 'status',
+      'aria-live': 'polite',
+      'aria-atomic': 'true',
+    }, `${copy[0]}。${copy[1]}。本插件不会代替你的决定。`),
+    !nativeDecision && h('section', {
       className: `os26-status-capsule${expanded ? ' is-expanded' : ''}`,
       role: 'status',
       'aria-live': 'polite',
@@ -48,11 +59,6 @@ export function StatusOverlay({ signalStore, configStore }) {
     signal.state === 'tool-running' && h('section', { className: 'os26-activity-surface', 'aria-label': '工具活动' },
       h('div', { className: 'os26-activity-track', 'aria-hidden': 'true' }, h('i')),
       h('span', null, 'Harness 正在执行真实调用')),
-    (signal.state === 'approval' || signal.state === 'blocked') && h('aside', {
-      className: 'os26-attention-surface',
-      role: 'note',
-    }, h('strong', null, signal.state === 'approval' ? '操作权已交还给你' : 'Agent 正在等你'),
-    h('span', null, signal.state === 'approval' ? '使用原生审批控件继续；本插件不会代替你的决定。' : '在原生输入区完成问题或计划审阅。')),
     signal.state === 'success' && h('output', { className: 'os26-receipt-surface' },
       h('span', { className: 'os26-check', 'aria-hidden': 'true' }, '✓'),
       h('span', null, h('strong', null, '完成回执'), h('small', null, '由真实运行结束事件触发'))))
@@ -61,9 +67,30 @@ export function StatusOverlay({ signalStore, configStore }) {
 export function ComposerDock({ signalStore, configStore }) {
   const signal = useStore(signalStore)
   const config = useStore(configStore)
+  const dockRef = React.useRef(null)
+  React.useEffect(() => {
+    if (!config.enabled) return undefined
+    const seat = dockRef.current?.closest('[data-composer-seat]')
+    const card = seat?.querySelectorAll('[data-composer-card]')?.[0]
+    if (!seat || !card) return undefined
+    const syncPrimary = () => {
+      for (const button of card.querySelectorAll('[data-os26-primary]')) button.removeAttribute('data-os26-primary')
+      const buttons = card.querySelectorAll('button')
+      buttons.item(buttons.length - 1)?.setAttribute('data-os26-primary', '')
+    }
+    syncPrimary()
+    const observer = typeof MutationObserver === 'function'
+      ? new MutationObserver(syncPrimary)
+      : null
+    observer?.observe(card, { childList: true, subtree: true })
+    return () => {
+      observer?.disconnect()
+      for (const button of card.querySelectorAll('[data-os26-primary]')) button.removeAttribute('data-os26-primary')
+    }
+  }, [config.enabled])
   if (!config.enabled) return null
   const copy = STATE_COPY[signal.state] ?? STATE_COPY.idle
-  return h('div', { className: 'os26-composer-dock', 'data-state': signal.state },
+  return h('div', { ref: dockRef, className: 'os26-composer-dock', 'data-state': signal.state },
     h(StateMark, { state: signal.state }),
     h('span', null, copy[0]),
     h('span', { className: 'os26-composer-detail' }, signal.state === 'idle' ? 'Agent-reactive material' : copy[1]))
@@ -71,19 +98,28 @@ export function ComposerDock({ signalStore, configStore }) {
 
 function Toggle({ checked, onChange, label, hint }) {
   return h('label', { className: 'os26-setting-row' },
-    h('span', null, h('strong', null, label), hint && h('small', null, hint)),
-    h('input', { type: 'checkbox', checked, onChange: e => onChange(e.currentTarget.checked) }))
+    h('span', { className: 'os26-setting-copy' }, h('strong', null, label), hint && h('small', null, hint)),
+    h('span', { className: 'os26-toggle' },
+      h('input', { type: 'checkbox', checked, onChange: e => onChange(e.currentTarget.checked) }),
+      h('i', { 'aria-hidden': 'true' })))
 }
 
 function Select({ value, onChange, label, children }) {
-  return h('label', { className: 'os26-setting-row' }, h('strong', null, label),
-    h('select', { value, onChange: e => onChange(e.currentTarget.value) }, children))
+  return h('label', { className: 'os26-setting-row' }, h('strong', { className: 'os26-setting-label' }, label),
+    h('span', { className: 'os26-select-shell' },
+      h('select', { value, onChange: e => onChange(e.currentTarget.value) }, children),
+      h('i', { 'aria-hidden': 'true' })))
 }
 
 function Range({ value, onChange, label, min, max, unit = '' }) {
+  const progress = ((value - min) / (max - min)) * 100
   return h('label', { className: 'os26-range-row' },
-    h('span', null, h('strong', null, label), h('output', null, `${value}${unit}`)),
-    h('input', { type: 'range', min, max, value, onChange: e => onChange(Number(e.currentTarget.value)) }))
+    h('span', { className: 'os26-range-heading' }, h('strong', null, label), h('output', null, `${value}${unit}`)),
+    h('input', {
+      type: 'range', min, max, value,
+      style: { '--os26-range-progress': `${progress}%` },
+      onChange: e => onChange(Number(e.currentTarget.value)),
+    }))
 }
 
 const option = (value, label) => h('option', { value, key: value }, label)

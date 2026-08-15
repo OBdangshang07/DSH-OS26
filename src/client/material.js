@@ -10,31 +10,36 @@ export function effectiveOpacity(config, luminance = PRESET_LUMINANCE[config.wal
 
 export function materialTokens(config, luminance = PRESET_LUMINANCE[config.wallpaper] ?? 0.28) {
   const alpha = effectiveOpacity(config, luminance)
+  const themed = (light, dark) => {
+    if (config.scheme === 'light') return { light, dark: light }
+    if (config.scheme === 'dark') return { light: dark, dark }
+    return { light, dark }
+  }
   return {
-    '--dsw-alias-bg-base': {
-      light: `rgba(238, 245, 255, ${Math.min(0.97, alpha + 0.08)})`,
-      dark: `rgba(8, 15, 31, ${Math.min(0.97, alpha + 0.08)})`,
-    },
-    '--dsw-alias-bg-layer-1': {
-      light: `rgba(255, 255, 255, ${alpha})`,
-      dark: `rgba(19, 28, 48, ${alpha})`,
-    },
-    '--dsw-alias-bg-layer-2': {
-      light: `rgba(248, 251, 255, ${Math.min(0.98, alpha + 0.07)})`,
-      dark: `rgba(27, 38, 61, ${Math.min(0.98, alpha + 0.07)})`,
-    },
-    '--dsw-alias-bg-overlay': {
-      light: `rgba(255, 255, 255, ${Math.min(0.98, alpha + 0.12)})`,
-      dark: `rgba(12, 20, 38, ${Math.min(0.98, alpha + 0.12)})`,
-    },
-    '--dsw-alias-border-l1': { light: 'rgba(255,255,255,.76)', dark: 'rgba(255,255,255,.20)' },
-    '--dsw-alias-border-l2': { light: 'rgba(62,78,112,.20)', dark: 'rgba(214,230,255,.28)' },
-    '--dsw-alias-label-primary': { light: '#17213a', dark: '#f5f8ff' },
-    '--dsw-alias-label-secondary': { light: '#485573', dark: '#b9c4db' },
-    '--dsw-specific-sidebar-fill': {
-      light: `rgba(231, 240, 255, ${Math.min(0.96, alpha + 0.03)})`,
-      dark: `rgba(9, 18, 37, ${Math.min(0.96, alpha + 0.03)})`,
-    },
+    '--dsw-alias-bg-base': themed(
+      `rgba(242, 244, 248, ${Math.min(0.98, alpha + 0.16)})`,
+      `rgba(11, 13, 18, ${Math.min(0.98, alpha + 0.16)})`,
+    ),
+    '--dsw-alias-bg-layer-1': themed(
+      `rgba(255, 255, 255, ${alpha})`,
+      `rgba(24, 26, 32, ${alpha})`,
+    ),
+    '--dsw-alias-bg-layer-2': themed(
+      `rgba(250, 251, 253, ${Math.min(0.98, alpha + 0.07)})`,
+      `rgba(34, 36, 43, ${Math.min(0.98, alpha + 0.07)})`,
+    ),
+    '--dsw-alias-bg-overlay': themed(
+      `rgba(248, 249, 252, ${Math.min(0.98, alpha + 0.12)})`,
+      `rgba(17, 19, 24, ${Math.min(0.98, alpha + 0.12)})`,
+    ),
+    '--dsw-alias-border-l1': themed('rgba(255,255,255,.82)', 'rgba(255,255,255,.16)'),
+    '--dsw-alias-border-l2': themed('rgba(53,57,68,.22)', 'rgba(229,232,241,.24)'),
+    '--dsw-alias-label-primary': themed('#181a20', '#f4f5f8'),
+    '--dsw-alias-label-secondary': themed('#5e626d', '#b8bbc5'),
+    '--dsw-specific-sidebar-fill': themed(
+      `rgba(236, 239, 244, ${Math.min(0.96, alpha + 0.03)})`,
+      `rgba(16, 18, 23, ${Math.min(0.96, alpha + 0.03)})`,
+    ),
   }
 }
 
@@ -82,6 +87,7 @@ export function applyMaterialRoot(root, config, capabilities = {}) {
   root.dataset.os26Scheme = config.scheme
   root.dataset.os26Motion = config.motion
   root.dataset.os26Opaque = config.opaque ? 'true' : 'false'
+  root.dataset.os26Wallpaper = config.wallpaper
   root.dataset.os26Backdrop = capabilities.backdrop === false ? 'fallback' : 'supported'
   root.style.setProperty('--os26-opacity', String(effectiveOpacity(config)))
   root.style.setProperty('--os26-blur', `${config.blur}px`)
@@ -92,6 +98,6 @@ export function applyMaterialRoot(root, config, capabilities = {}) {
 }
 
 export function clearMaterialRoot(root) {
-  for (const key of ['dshOs26', 'os26Quality', 'os26Scheme', 'os26Motion', 'os26Opaque', 'os26Backdrop']) delete root.dataset[key]
+  for (const key of ['dshOs26', 'os26Quality', 'os26Scheme', 'os26Motion', 'os26Opaque', 'os26Wallpaper', 'os26Backdrop']) delete root.dataset[key]
   for (const name of ['--os26-opacity', '--os26-blur', '--os26-saturation', '--os26-highlight', '--os26-luminance', '--os26-wallpaper', '--os26-pointer-x', '--os26-pointer-y']) root.style.removeProperty(name)
 }

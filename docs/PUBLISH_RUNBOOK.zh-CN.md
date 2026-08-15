@@ -58,7 +58,60 @@ git push origin v0.1.0-beta.1
 
 不得用开发者工具改状态、不得访问真实仓库、不得在一个镜头中假装完成两条分支。
 
-## 5. 发布 npm beta
+## 5. 人工可访问性与第二人复核
+
+下列检查必须由真人在准备发布的同一 tarball 上完成。CDP、缩小视口、
+`deviceScaleFactor` 和浏览器 AX Tree 可以作为补充证据，但不能代替本节签字。
+
+### 实际浏览器 Ctrl+ 200%
+
+1. 在 Chrome 或 Edge 中按 `Ctrl+0` 回到 100%，再用 `Ctrl++` 将浏览器菜单显示的
+   缩放值调到 200%；不要只改 Windows 显示缩放或 DevTools 设备比例。
+2. 分别检查空 Composer、多行输入、长模型/权限名、多插件模式菜单、设置页底部操作、
+   审批、用户问题和计划审阅。
+3. 用键盘完成一次审批和一次问题提交；确认关键按钮始终可见、页面无横向滚动，
+   决策面消失后焦点回到 Composer。
+4. 截图必须同时包含浏览器 200% 缩放提示和被测控件；任何裁切、竖排按钮、文字遮挡
+   或需要把缩放降回去才能操作都判为失败。
+
+### 真实屏幕阅读器
+
+1. Windows beta 至少使用 Narrator 或 NVDA；记录产品名和版本。Narrator 可用
+   `Win+Ctrl+Enter` 启停。
+2. 不看鼠标，仅用 `Tab`、`Shift+Tab`、方向键、`Space` 和 `Enter` 走完 Composer、
+   模式菜单、设置、审批、用户问题与计划审阅。
+3. 核对名称、角色、选中/禁用状态和问题标题会被播报；玻璃装饰层不得形成重复焦点，
+   审批/问题/计划结束后不得把阅读顺序留在已消失的控件上。
+4. 记录实际播报问题。AX Tree 自动检查通过不等于本项通过。
+
+### 第二位使用者独立复核
+
+第二位测试者只能拿到 README、tarball 和期望 SHA-256，不能接受实现者口头提示。
+测试者需要独立完成：校验哈希、安装、重启 DSH Web、完成真实任务、键盘审批、切换
+reduced-motion/transparency、禁用、卸载、重启并确认原 UI 恢复。若需要实现者介入才完成，
+本门禁失败并应修正文档或产品。
+
+发布签字记录：
+
+```text
+Artifact: dsh-os26-0.1.0-beta.1.tgz
+Expected SHA-256: <copy from the candidate's external SHA256SUMS.txt>
+Reviewer alias:
+Review date/time/timezone:
+OS and version:
+DSH version:
+Browser and version:
+Screen reader and version:
+Actual Ctrl+ 200%: PASS / FAIL
+Screen-reader decision flows: PASS / FAIL
+Independent install/task/uninstall: PASS / FAIL
+Stock UI restored after restart: PASS / FAIL
+Evidence links or filenames:
+Notes:
+Reviewer sign-off:
+```
+
+## 6. 发布 npm beta
 
 在 GitHub Actions 手动运行 `Publish npm beta`，输入完整确认字符串：
 
@@ -75,7 +128,7 @@ dsh plugin --profile web add dsh-os26@beta
 
 必须从 npm 重新安装并重复 smoke test；本地 tarball 通过不能替代 registry 验证。
 
-## 6. GitHub Release 与视频
+## 7. GitHub Release 与视频
 
 GitHub Release 应包含版本、DSH/浏览器兼容范围、已知限制、tarball SHA-256、安装和
 卸载命令。正式视频只能录制 npm 已发布包；如画面使用 fixture 或设计预览，必须明确

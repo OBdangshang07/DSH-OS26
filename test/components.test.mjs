@@ -30,7 +30,12 @@ for (const [state, expected] of Object.entries(cases)) {
     assert.match(overlay, new RegExp(expected))
     assert.match(composer, new RegExp(`data-state="${state}"`))
     if (state === 'tool-running') assert.match(overlay, /2 个工具/)
-    if (state === 'approval') assert.match(overlay, /本插件不会代替你的决定/)
+    if (state === 'approval') {
+      assert.match(overlay, /本插件不会代替你的决定/)
+      assert.match(overlay, /os26-native-decision-announcer/)
+      assert.doesNotMatch(overlay, /os26-status-capsule/)
+      assert.doesNotMatch(overlay, /os26-attention-surface/)
+    }
     if (state === 'success') assert.match(overlay, /完成回执/)
   })
 }

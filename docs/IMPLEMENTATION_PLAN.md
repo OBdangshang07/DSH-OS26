@@ -1,5 +1,10 @@
 # DSH-OS26 Implementation Plan
 
+> Visual quality note: the `0.1.0-beta.1` implementation passed its technical
+> gates but did not meet the launch visual bar. The component-level V2 redesign,
+> compatibility tiers and new visual release gates are defined in
+> [`VISUAL_REDESIGN_PLAN_V2.zh-CN.md`](./VISUAL_REDESIGN_PLAN_V2.zh-CN.md).
+
 ## Release target
 
 The first public release is `0.1.0-beta.1`. It must be a useful daily-driver

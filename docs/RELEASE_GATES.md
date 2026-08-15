@@ -7,8 +7,12 @@ P0 gate cannot be waived for a launch date or a better-looking video.
 
 - [x] A clean DSH Web profile installs the packed tarball with one command.
 - [x] DSH starts without warnings attributable to DSH-OS26.
-- [ ] A real agent turn completes through thinking, tool execution and result.
-- [ ] Approval allow and deny both work through official DSH behavior.
+- [x] A real agent turn completes through thinking, tool execution and result.
+- [x] Approval allow and deny both work through official DSH behavior.
+- [x] A real user question can be selected and submitted through official DSH
+  controls.
+- [x] A real plan review can be independently scrolled and confirmed through
+  official DSH controls without hiding its decision actions.
 - [x] Disable and uninstall restore the stock interface after restart.
 - [x] No user data, prompt, credential or file path leaves the browser.
 - [x] No launch feature exists only in a mock/demo build.
@@ -99,9 +103,12 @@ beta. Never slow down the default mode to preserve a video effect.
 - [x] Large text and meaningful control boundaries are at least 3:1.
 - [x] State has text/icon semantics in addition to color and motion.
 - [x] Focus is visible through every interactive plugin surface.
-- [ ] Approval focus returns to a predictable target.
-- [x] Screen-reader announcements are useful and semantic duplicates are
-  suppressed.
+- [x] Approval, question and plan-review focus return to the native composer
+  without stealing focus from another active control.
+- [x] Browser accessibility trees expose the expected headings, radios,
+  buttons, checked state and disabled state without plugin-owned semantic
+  duplicates.
+- [ ] A real screen reader announces native decision flows usefully.
 - [x] Reduced motion removes non-essential movement.
 - [x] Reduced transparency produces an opaque, readable interface.
 - [ ] 200% zoom does not hide critical actions.
@@ -155,3 +162,9 @@ Before publishing, one person other than the primary implementer should:
 4. Switch to reduced motion/transparency.
 5. Uninstall and confirm the stock UI returns.
 6. Compare the README and launch video against the actual package.
+
+Record the reviewer, timestamp, OS, DSH/browser/screen-reader versions,
+artifact SHA-256, PASS/FAIL for actual Ctrl+ 200%, screen-reader decision flows,
+independent install/task/uninstall and stock-UI recovery, plus evidence paths.
+The sign-off template is in `docs/PUBLISH_RUNBOOK.zh-CN.md`; automated viewport
+emulation and browser AX-tree inspection do not satisfy these human gates.

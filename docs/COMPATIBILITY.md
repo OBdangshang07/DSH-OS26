@@ -7,8 +7,9 @@ versions and evidence during each release candidate.
 
 `0.1.0-beta.1` has completed packed-tarball install, real browser load,
 enable/disable, uninstall and stock-profile recovery in an isolated profile.
-Agent turns and approval allow/deny still require credentialed manual testing;
-do not advertise those paths as verified yet.
+Real agent turns, approval allow/deny, user questions and plan review have all
+passed against the installed tarball. Actual browser Ctrl+ 200% zoom, manual
+screen-reader review and second-person install/uninstall remain human gates.
 
 ## Development baseline
 
@@ -24,7 +25,7 @@ do not advertise those paths as verified yet.
 
 | DSH version / commit | Browser | OS | Install | Real turn | Approval | Restart | Uninstall | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `0.1.0-rc.6` / `47f9438` | Chrome 151 / Edge 151 | Windows 11 | pass | pending | pending | pass | pass | [evidence](ACCEPTANCE_EVIDENCE.md) |
+| `0.1.0-rc.6` / `47f9438` | Chrome 151 / Edge 151 | Windows 11 | pass | pass | pass | pass | pass | [evidence](ACCEPTANCE_EVIDENCE.md) |
 
 The npm version and the repository default branch (`master`) were rechecked on
 2026-08-16: npm remained `0.1.0-rc.6` and the default-branch head remained
@@ -54,5 +55,6 @@ notice, and names a conflicting registered theme when the API exposes one.
   WebGL; unsupported filters fall back to Balanced rendering.
 - Plugin conflict detection currently warns for a non-built-in active theme;
   it does not disable another plugin automatically.
-- macOS/Linux, real approval allow/deny and credentialed real-turn video
-  capture remain release blockers, not implied support.
+- macOS/Linux, actual browser Ctrl+ 200%, manual assistive-technology review,
+  second-person review and final-tarball video capture remain release blockers,
+  not implied support.

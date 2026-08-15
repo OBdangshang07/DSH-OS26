@@ -24,8 +24,10 @@ approvals condense, failures disturb the surface, and completed work settles.
 - no network calls, telemetry, credential access, shell execution or DSH source
   patching.
 
-The public beta has **not been published yet**. Real-turn/approval recording,
-cross-browser visual review and an independent human install review remain
+The public beta has **not been published yet**. Packed-artifact browser
+automation and real agent, approval, question and plan-review flows have passed
+on the Windows beta baseline. Actual browser Ctrl+ 200% zoom, a real
+screen-reader pass and an independent human install/uninstall review remain
 release gates; see [acceptance evidence](docs/ACCEPTANCE_EVIDENCE.md).
 
 ## Development
@@ -44,7 +46,7 @@ in an unrelated npm project is not enough):
 
 ```sh
 npm pack
-dsh plugin --profile web add "D:/AI_project/DSH_OS26/dsh-os26-0.1.0-beta.1.tgz"
+dsh plugin --profile web add "./dsh-os26-0.1.0-beta.1.tgz"
 ```
 
 After npm publication, the equivalent command will be:

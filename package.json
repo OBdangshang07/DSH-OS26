@@ -28,6 +28,9 @@
     "test": "node --test test/*.test.mjs",
     "quality": "npm run build:check && npm test",
     "acceptance:browser": "node scripts/browser-acceptance.mjs",
+    "acceptance:runtime": "node scripts/runtime-surface-acceptance.mjs",
+    "acceptance:real-flow": "node scripts/real-flow-acceptance.mjs",
+    "acceptance:interactions": "node scripts/interaction-flow-acceptance.mjs",
     "acceptance:memory": "node scripts/browser-memory.mjs",
     "acceptance:upgrade": "node scripts/upgrade-acceptance.mjs",
     "release:audit": "node scripts/release-audit.mjs",
@@ -44,7 +47,10 @@
         "@deepseek-ai/dsh-client-ui-theme",
         "@deepseek-ai/dsh-client-ui-layout",
         "@deepseek-ai/dsh-client-ui-settings",
-        "@deepseek-ai/dsh-client-ui-conversation"
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-tool",
+        "@deepseek-ai/dsh-client-ui-goal",
+        "@deepseek-ai/dsh-client-ui-user-questions"
       ]
     }
   },

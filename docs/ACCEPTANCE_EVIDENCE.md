@@ -6,11 +6,11 @@ was modified and DSH telemetry was explicitly disabled for the run.
 ## Artifact
 
 - Built with Node `22.19.0` and npm `10.9.3`.
-- `npm run quality`: 33/33 automated tests pass.
+- `npm run quality`: 47/47 automated tests pass.
 - `npm audit`: 0 vulnerabilities in the plugin development tree.
-- Packed artifact: 17 declared files, about 34 kB packed / 92 kB unpacked.
-- Client bundle: 39,341 bytes / 12,087 bytes gzip, SHA-256
-  `82f3eb1e59efbd53fb3aa60a59401ebc1083ceeabf6ece010ca0925a72ffb16e`.
+- Packed artifact: 18 declared files, about 54.2 kB packed / 172.6 kB unpacked.
+- Client bundle: 95,894 bytes / 21,355 bytes gzip, SHA-256
+  `a7e1f1137cbf23db29bbc9c5aff6a1370568e77e4f3ec96cecf465feda2c74de`.
 - No bundled dependency, remote asset, credential read, telemetry or shell face.
 
 ## Official-profile acceptance
@@ -46,6 +46,60 @@ Baseline: `@deepseek-ai/dsh@0.1.0-rc.6`, source commit
     1.20 MB more JS heap than a fresh stock page (a conservative upper bound,
     because the stock measurement did not mount Settings).
 
+## V2 real-runtime acceptance
+
+The rebuilt tarball was completely removed and re-added to the real `web`
+profile before these checks. Edge `151.0.4129.72` loaded the installed bundle;
+its SHA-256 matched the worktree bundle above.
+
+1. A real Read Only agent turn produced native thinking, denied Pwsh and
+   escalation-tool rows, then settled from real DSH session projections.
+2. The side-effect-free expression `[System.IO.Path]::GetTempPath()` was first
+   denied by Windows Read Only ConstrainedLanguage, then retried through the
+   official approval service. Separate sessions exercised real `拒绝` and
+   `允许一次` decisions.
+3. Both approval cards stayed inside a 1440x900 viewport with zero page
+   overflow, a 20 px radius, a 1 px edge and
+   `blur(19.68px) saturate(1.5) contrast(1.04)`.
+4. No plugin status or attention overlay competed with the native decision
+   card (`competingOverlays: 0`), so both approval actions remained visible.
+5. After both deny and allow, focus returned to the enabled native composer
+   `TEXTAREA` and remained there when the turn settled.
+6. Real historical sessions exposed settled and failed tool rows plus a goal
+   bar. Expanded tool glass used a 14 px radius and 1 px edge without wrapping
+   the native code/diff reading surface; the goal glass used a 16 px radius.
+7. Automatic full-text titles were added only to genuinely clipped,
+   ellipsized/clamped text; current real sessions produced 8 such affordances.
+8. Light, dark and system; Eco, Balanced and Cinematic; 1920, 1440, 1280 and
+   768 layouts; reduced motion/transparency; keyboard traversal; compact
+   multi-preset menu; and effective-200%-layout automation all passed with no
+   page exception or horizontal overflow.
+9. A real `ask_user_question` turn rendered one single-select question. The
+   card stayed inside 1440x900 with a 20 px radius, zero page overflow and no
+   competing plugin overlay; `Balanced Glass` was selected and submitted
+   through the native radio and submit controls.
+10. A real `/plan` turn called `exit_plan_mode` and rendered the specialized
+    plan-review card. Its 542 px overflowing plan body scrolled independently
+    while `去聊天里说`, `拒绝` and `确认执行` remained visible. Confirmation
+    completed a zero-side-effect conversational plan.
+11. Both question and plan review returned focus to the native composer
+    `TEXTAREA`. Their full browser accessibility trees exposed the expected
+    heading, radio and button roles/names; disabled and checked state were
+    present where applicable.
+12. A long real conversation was scrolled to its top. The composer seat stayed
+    visible with computed `position: sticky` and `bottom: 0`; its bottom edge
+    exactly matched the message scroller bottom edge at 900 px. The same
+    composer remained the post-decision focus target in the approval, question
+    and plan-review flows above.
+13. Native Settings used a 28 px modal surface over a dimmed, blurred scrim.
+    While it was open, the underlying composer and agent-status overlay both
+    had zero opacity and hidden visibility, so no input field leaked through
+    the dialog.
+14. Sidebar session rows used a 15 px radius, workspace/group rows used 10 px,
+    and the selected session used a neutral glass highlight with a narrow focus
+    marker. Long Chinese, English and path labels produced zero row or tree
+    overflow.
+
 ## Upgrade and rollback proof
 
 The upgrade test used the same isolated DSH profile and the same persisted
@@ -64,11 +118,9 @@ Chrome user-data directory across both package versions:
 
 ## Still required before publication
 
-- Credentialed real turn covering thinking → tool → result.
-- Real approval allow and deny, blocked question and tool-error paths.
-- Manual approval focus-return, screen-reader review and actual browser-zoom
-  checks around native approval controls (plugin-owned controls and effective
-  200% layout already pass automation).
+- Manual screen-reader review and actual browser Ctrl+ zoom checks around
+  native decision controls (browser AX-tree semantics, focus return and
+  effective-200%-layout automation already pass).
 - macOS or Linux coverage before stable `0.1.0` (Windows is the beta baseline).
 - A second person's tarball install/uninstall review.
 - Name/prior-art audit repeated within 24 hours of publication.

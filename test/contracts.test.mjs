@@ -18,6 +18,9 @@ test('declares a DSH Web bundle and client face', () => {
     '@deepseek-ai/dsh-client-ui-layout',
     '@deepseek-ai/dsh-client-ui-settings',
     '@deepseek-ai/dsh-client-ui-conversation',
+    '@deepseek-ai/dsh-client-ui-tool',
+    '@deepseek-ai/dsh-client-ui-goal',
+    '@deepseek-ai/dsh-client-ui-user-questions',
   ])
 })
 
@@ -26,13 +29,19 @@ test('mounts one stable Cordis row', () => {
   assert.match(patch, /name:\s*dsh-os26/)
 })
 
-test('emits a DSH module-loader bundle', () => {
+test('emits a DSH module-loader bundle with a bounded semantic compatibility layer', () => {
   assert.match(client, /window\.__ModuleLoader__\.load/)
   assert.match(client, /id:\s*['"]dsh-os26['"]/)
   assert.match(client, /Agent-reactive material/)
   assert.match(client, /conversation\.composer\.dock/)
   assert.match(client, /settings\.section/)
-  assert.doesNotMatch(client, /querySelector/)
+  assert.match(client, /closest\("\[data-composer-seat\]"\)/)
+  assert.match(client, /querySelectorAll\("\[data-composer-card\]"\)/)
+  assert.match(client, /observer\?\.observe\(card/)
+  assert.match(client, /removeAttribute\("data-os26-primary"\)/)
+  assert.doesNotMatch(client, /document\.querySelector/)
+  assert.doesNotMatch(client, /observer\?\.observe\(document/)
+  assert.doesNotMatch(client, /module_css/)
 })
 
 test('registers a client module with an apply function', () => {
