@@ -1,0 +1,5 @@
+# DSH-OS26 bundle layer: mount the host entry so DSH discovers its Web client.
+- insert:
+    - id: dsh-os26
+      name: dsh-os26
+
