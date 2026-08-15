@@ -25,6 +25,8 @@ also pre-stable.
   acceptance evidence.
 - Chrome/Edge theme, quality-tier, focus, viewport and effective-200%-layout
   acceptance matrix.
+- A deterministic offline video fixture, cross-platform CI, manually gated
+  release-candidate packaging and provenance-ready npm publishing workflow.
 
 ### Fixed
 

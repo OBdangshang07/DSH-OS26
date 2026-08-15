@@ -1,0 +1,14 @@
+{
+  "schema": "dsh-os26-demo/v1",
+  "taskId": "os26-safe-video-fixture",
+  "title": "DSH-OS26 deterministic launch demo",
+  "safe": true,
+  "network": false,
+  "output": "work/result.json",
+  "items": [
+    { "id": "glass", "label": "Material", "weight": 8 },
+    { "id": "signal", "label": "Agent state", "weight": 7 },
+    { "id": "access", "label": "Accessibility", "weight": 6 },
+    { "id": "cleanup", "label": "Clean uninstall", "weight": 5 }
+  ]
+}

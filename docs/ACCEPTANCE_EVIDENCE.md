@@ -6,9 +6,9 @@ was modified and DSH telemetry was explicitly disabled for the run.
 ## Artifact
 
 - Built with Node `22.19.0` and npm `10.9.3`.
-- `npm run quality`: 30/30 automated tests pass.
+- `npm run quality`: 33/33 automated tests pass.
 - `npm audit`: 0 vulnerabilities in the plugin development tree.
-- Packed artifact: 16 declared files, about 32 kB packed / 87 kB unpacked.
+- Packed artifact: 17 declared files, about 34 kB packed / 92 kB unpacked.
 - Client bundle: 39,341 bytes / 12,087 bytes gzip, SHA-256
   `82f3eb1e59efbd53fb3aa60a59401ebc1083ceeabf6ece010ca0925a72ffb16e`.
 - No bundled dependency, remote asset, credential read, telemetry or shell face.

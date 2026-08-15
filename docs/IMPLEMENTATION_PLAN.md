@@ -23,7 +23,7 @@ UI after uninstalling it.
 | Settings | 14 native controls, bounded 2 MB local import, reset, conflict warning and privacy-safe diagnostics | Keyboard order, explicit focus rings and residue-free enable/disable pass in Chrome and Edge |
 | Operations | Pack/install, restart, legacy-config upgrade, disable, uninstall and stock recovery | Repeated against the real tarball in an isolated DSH/browser profile |
 | Performance | Zero runtime dependency, no external resource, no idle render loop in Eco | 39,341-byte client; about 1.20 MB conservative heap delta; no idle long task observed |
-| Publication | README, changelog, compatibility, claim rules, prior-art credit and video plan | Name currently clear; publication, second-person review and final real-flow video remain external gates |
+| Publication | README, changelog, compatibility, claim rules, prior-art credit, safe demo fixture, CI and gated publishing runbook | Name currently clear; publication, second-person review and final real-flow video remain external gates |
 
 ## Scope
 

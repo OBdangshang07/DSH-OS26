@@ -1,0 +1,38 @@
+name: Publish npm beta
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type PUBLISH dsh-os26@0.1.0-beta.1
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    if: ${{ inputs.confirm == 'PUBLISH dsh-os26@0.1.0-beta.1' }}
+    environment: npm-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v0.1.0-beta.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.19.0
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - run: npm ci
+      - run: npm run quality
+      - run: npm run release:audit
+      - run: npm audit
+      - name: Verify immutable release identity
+        run: |
+          test "$(node -p "require('./package.json').name")" = "dsh-os26"
+          test "$(node -p "require('./package.json').version")" = "0.1.0-beta.1"
+      - run: npm publish --tag beta --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

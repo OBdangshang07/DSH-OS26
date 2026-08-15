@@ -1,0 +1,37 @@
+name: Build release candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Git ref to package
+        required: true
+        default: v0.1.0-beta.1
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.19.0
+          cache: npm
+      - run: npm ci
+      - run: npm run quality
+      - run: npm run release:audit
+      - run: npm audit
+      - run: npm pack
+      - run: sha256sum dsh-os26-*.tgz > SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dsh-os26-release-candidate
+          path: |
+            dsh-os26-*.tgz
+            SHA256SUMS.txt
+          if-no-files-found: error
