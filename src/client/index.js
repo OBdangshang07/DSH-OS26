@@ -7,6 +7,19 @@ import { OS26_STYLES } from './styles.js'
 export const name = 'dsh-os26'
 export const inject = ['slots', 'theme', 'sessions']
 
+const KNOWN_FULL_SHELL_THEMES = ['dsh-liquid-glass', 'dsh-theme-lab', 'dsh-skin-glass', 'silk-background']
+
+export function themeCompatibility(snapshot) {
+  const ids = [snapshot?.active?.id, ...(snapshot?.themes ?? []).map(theme => theme?.id)]
+    .filter(id => typeof id === 'string')
+  const detected = ids.find(id => !['light', 'dark', 'system'].includes(id)
+    || KNOWN_FULL_SHELL_THEMES.some(name => id.includes(name)))
+  if (detected) {
+    return `检测到另一套主题“${detected}”。建议只保留一套全局主题 Token，避免透明度和文字颜色叠加。`
+  }
+  return '兼容提示：DSH 官方主题 API 无法识别仅覆盖 Token、但不注册主题名称的插件；请勿同时启用两套全局玻璃主题。'
+}
+
 function capabilities() {
   const css = globalThis.CSS
   return {
@@ -39,9 +52,14 @@ export function apply(ctx) {
       const config = configStore.getSnapshot()
       tokenOff?.()
       tokenOff = undefined
+      if (!config.enabled) {
+        clearMaterialRoot(root)
+        root.dataset.dshOs26 = 'off'
+        return
+      }
       applyMaterialRoot(root, config, caps)
-      if (config.enabled) tokenOff = ctx.theme.overrideTokens(name, materialTokens(config))
-      if (config.enabled && config.wallpaper === 'custom' && config.customWallpaper) {
+      tokenOff = ctx.theme.overrideTokens(name, materialTokens(config))
+      if (config.wallpaper === 'custom' && config.customWallpaper) {
         void sampleWallpaperLuminance(config.customWallpaper).then((luminance) => {
           if (currentGeneration !== generation) return
           root.style.setProperty('--os26-luminance', String(luminance))
@@ -63,9 +81,11 @@ export function apply(ctx) {
   ctx.effect(() => {
     let frame
     const onMove = event => {
-      if (frame || configStore.getSnapshot().quality === 'eco') return
+      const config = configStore.getSnapshot()
+      if (frame || !config.enabled || config.quality === 'eco') return
       frame = requestAnimationFrame(() => {
         frame = undefined
+        if (!configStore.getSnapshot().enabled) return
         root.style.setProperty('--os26-pointer-x', `${event.clientX}px`)
         root.style.setProperty('--os26-pointer-y', `${event.clientY}px`)
       })
@@ -88,10 +108,7 @@ export function apply(ctx) {
     quality: configStore.getSnapshot().quality,
     capabilities: caps,
   })
-  const theme = ctx.theme.getTheme?.()
-  const compatibility = theme && !['light', 'dark'].includes(theme.active?.id)
-    ? `检测到另一套完整主题“${theme.active.id}”。建议只保留一套主题 Token，避免透明度叠加。`
-    : ''
+  const compatibility = themeCompatibility(ctx.theme.getTheme?.())
 
   ctx.slots.inject('shell.overlay', () => [
     ctx.slots.register({ name: 'shell.overlay', id: 'dsh-os26-status', order: 2600, inject: () => ({ signalStore, configStore }) }, StatusOverlay),

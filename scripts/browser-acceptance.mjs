@@ -119,6 +119,59 @@ try {
   assert(baseline.externalResources.length === 0, `external resources detected: ${baseline.externalResources.join(', ')}`)
   report.checks.baseline = baseline
 
+  const themes = []
+  for (const testCase of [
+    { scheme: 'light', media: 'light', expectedText: '#17213a' },
+    { scheme: 'dark', media: 'dark', expectedText: '#f7f9ff' },
+    { scheme: 'system', media: 'light', expectedText: '#17213a' },
+    { scheme: 'system', media: 'dark', expectedText: '#f7f9ff' },
+  ]) {
+    await cdp.call('Emulation.setEmulatedMedia', {
+      media: 'screen', features: [{ name: 'prefers-color-scheme', value: testCase.media }],
+    })
+    await cdp.evaluate(`localStorage.setItem('dsh-os26.config.v1', JSON.stringify({
+      version: 1, enabled: true, scheme: '${testCase.scheme}', quality: 'balanced'
+    }))`)
+    await reload()
+    const theme = await cdp.evaluate(`(() => ({
+      scheme: document.documentElement.dataset.os26Scheme,
+      mediaLight: matchMedia('(prefers-color-scheme: light)').matches,
+      text: getComputedStyle(document.documentElement).getPropertyValue('--os26-text').trim(),
+    }))()`)
+    assert(theme.scheme === testCase.scheme, `theme scheme did not apply: ${JSON.stringify(theme)}`)
+    assert(theme.text.toLowerCase() === testCase.expectedText, `theme text palette mismatch: ${JSON.stringify(theme)}`)
+    themes.push({ ...testCase, ...theme })
+  }
+  report.checks.themes = themes
+
+  await cdp.call('Emulation.setEmulatedMedia', { media: 'screen', features: [] })
+  const qualityTiers = []
+  for (const quality of ['eco', 'balanced', 'cinematic']) {
+    await cdp.evaluate(`localStorage.setItem('dsh-os26.config.v1', JSON.stringify({
+      version: 1, enabled: true, scheme: 'system', quality: '${quality}'
+    }))`)
+    await reload()
+    const tier = await cdp.evaluate(`(() => {
+      const mark = document.querySelector('.os26-state-mark')
+      const capsule = document.querySelector('.os26-status-capsule')
+      const capsuleStyle = getComputedStyle(capsule)
+      return {
+        quality: document.documentElement.dataset.os26Quality,
+        svgFilters: document.querySelectorAll('#os26-fluid-optic').length,
+        animation: getComputedStyle(mark).animationName,
+        backdrop: capsuleStyle.backdropFilter || capsuleStyle.webkitBackdropFilter,
+      }
+    })()`)
+    assert(tier.quality === quality, `quality tier did not apply: ${JSON.stringify(tier)}`)
+    if (quality === 'eco') assert(tier.animation === 'none' && tier.backdrop === 'none', 'Eco is not static/opaque')
+    if (quality === 'balanced') assert(tier.svgFilters === 0, 'Balanced mounted Cinematic SVG')
+    if (quality === 'cinematic') assert(tier.svgFilters === 1, 'Cinematic SVG filter is missing')
+    qualityTiers.push(tier)
+  }
+  report.checks.qualityTiers = qualityTiers
+  await cdp.evaluate('localStorage.removeItem("dsh-os26.config.v1")')
+  await reload()
+
   await cdp.call('Performance.enable')
   await cdp.evaluate(`(() => {
     window.__os26LongTasks = []
@@ -150,6 +203,7 @@ try {
   const viewports = []
   for (const metrics of [
     { width: 1920, height: 1080, deviceScaleFactor: 1 },
+    { width: 1440, height: 900, deviceScaleFactor: 1 },
     { width: 1280, height: 800, deviceScaleFactor: 1.25 },
     { width: 768, height: 700, deviceScaleFactor: 2 },
   ]) {
@@ -230,6 +284,25 @@ try {
   assert(settings.disclaimer, 'independence disclaimer is missing')
   report.checks.settings = settings
 
+  const liveSchemeSwitch = []
+  for (const scheme of ['light', 'dark', 'system']) {
+    const result = await cdp.evaluate(`(() => {
+      const select = [...document.querySelectorAll('.os26-settings select')]
+        .find(control => [...control.options].some(option => option.value === '${scheme}'))
+      select.value = '${scheme}'
+      select.dispatchEvent(new Event('change', { bubbles: true }))
+      return new Promise(resolve => requestAnimationFrame(() => resolve({
+        requested: '${scheme}', applied: document.documentElement.dataset.os26Scheme,
+        styles: document.querySelectorAll('style[data-dsh-os26]').length,
+        capsules: document.querySelectorAll('.os26-status-capsule').length,
+      })))
+    })()`)
+    assert(result.applied === scheme && result.styles === 1 && result.capsules === 1,
+      `live scheme switch left stale or duplicate UI: ${JSON.stringify(result)}`)
+    liveSchemeSwitch.push(result)
+  }
+  report.checks.liveSchemeSwitch = liveSchemeSwitch
+
   const focusable = await cdp.evaluate(`(() => {
     const controls = [...document.querySelector('.os26-settings').querySelectorAll('input,select,button')]
     controls[0]?.focus()
@@ -237,17 +310,46 @@ try {
   })()`)
   assert(focusable.firstFocused, 'first settings control cannot receive focus')
   const keyboardOrder = []
+  const focusIndicators = []
   for (let index = 0; index < focusable.count; index += 1) {
-    keyboardOrder.push(await cdp.evaluate(`(() => {
+    const focusState = await cdp.evaluate(`(() => {
       const active = document.activeElement
       const controls = [...document.querySelector('.os26-settings').querySelectorAll('input,select,button')]
-      return controls.indexOf(active)
-    })()`))
+      const target = active.type === 'file' ? active.closest('label') : active
+      const style = getComputedStyle(target)
+      return { index: controls.indexOf(active), outlineStyle: style.outlineStyle,
+        outlineWidth: style.outlineWidth, outlineColor: style.outlineColor }
+    })()`)
+    keyboardOrder.push(focusState.index)
+    focusIndicators.push(focusState)
     await cdp.call('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 })
     await cdp.call('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 })
   }
   assert(keyboardOrder.every((value, index) => value === index), `Tab order is not sequential: ${keyboardOrder.join(',')}`)
+  assert(focusIndicators.every(item => item.outlineStyle !== 'none' && Number.parseFloat(item.outlineWidth) >= 2),
+    `a settings control lacks a visible focus ring: ${JSON.stringify(focusIndicators)}`)
   report.checks.keyboard = { traversed: keyboardOrder.length, unique: new Set(keyboardOrder).size }
+  report.checks.focusIndicators = focusIndicators
+
+  await cdp.call('Emulation.setDeviceMetricsOverride', {
+    width: 720, height: 450, deviceScaleFactor: 2, mobile: false,
+  })
+  const effective200Percent = await cdp.evaluate(`(async () => {
+    const buttons = [...document.querySelectorAll('.os26-settings-actions button')]
+    const results = []
+    for (const button of buttons) {
+      button.scrollIntoView({ block: 'center' })
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+      const rect = button.getBoundingClientRect()
+      results.push({ text: button.innerText, rect: [rect.left, rect.top, rect.right, rect.bottom],
+        visible: rect.left >= 0 && rect.top >= 0 && rect.right <= innerWidth && rect.bottom <= innerHeight })
+    }
+    return { viewport: [innerWidth, innerHeight], actions: results }
+  })()`)
+  assert(effective200Percent.actions.length === 2 && effective200Percent.actions.every(action => action.visible),
+    `critical settings actions fail effective 200% layout: ${JSON.stringify(effective200Percent)}`)
+  report.checks.effective200PercentLayout = effective200Percent
+  await cdp.call('Emulation.clearDeviceMetricsOverride')
 
   await cdp.evaluate(`document.querySelector('.os26-settings input[type=checkbox]').click()`)
   await delay(100)
@@ -255,8 +357,11 @@ try {
     root: document.documentElement.dataset.dshOs26,
     capsules: document.querySelectorAll('.os26-status-capsule').length,
     token: getComputedStyle(document.documentElement).getPropertyValue('--dsw-alias-bg-layer-1').trim(),
+    privateVariables: ['--os26-opacity', '--os26-blur', '--os26-wallpaper', '--os26-pointer-x']
+      .filter(name => document.documentElement.style.getPropertyValue(name) !== ''),
   })`)
-  assert(disabled.root === 'off' && disabled.capsules === 0 && disabled.token === '', 'master switch left visual residue')
+  assert(disabled.root === 'off' && disabled.capsules === 0 && disabled.token === ''
+    && disabled.privateVariables.length === 0, 'master switch left visual residue')
   await cdp.evaluate(`document.querySelector('.os26-settings input[type=checkbox]').click()`)
   await delay(100)
   const enabled = await cdp.evaluate(`({

@@ -39,6 +39,8 @@ export function createSignalStore(currentProvideInfo, timers = globalThis) {
   let successTimer
   let lastWasActive = false
   let revision = 0
+  let bindingRevision = 0
+  let disposed = false
 
   const clearSuccess = () => {
     if (successTimer !== undefined) timers.clearTimeout(successTimer)
@@ -50,7 +52,14 @@ export function createSignalStore(currentProvideInfo, timers = globalThis) {
     const active = ['thinking', 'tool-running', 'approval', 'blocked'].includes(next.state)
     const completed = !active && lastWasActive && next.state === 'idle'
     lastWasActive = active
+    const current = store.getSnapshot()
+    if (current.state === 'success' && next.state === 'idle' && current.sessionId === sessionId) return
     clearSuccess()
+    const unchanged = current.state === next.state
+      && current.source === next.source
+      && current.sessionId === sessionId
+      && current.toolCount === next.toolCount
+    if (!completed && unchanged) return
     const signal = { ...next, sessionId, revision: ++revision }
     if (completed) {
       store.set({ ...signal, state: 'success', source: 'run-settled' })
@@ -66,6 +75,7 @@ export function createSignalStore(currentProvideInfo, timers = globalThis) {
   }
 
   const bindCurrent = () => {
+    const activeBinding = ++bindingRevision
     sessionOff?.()
     sessionOff = undefined
     clearSuccess()
@@ -76,7 +86,10 @@ export function createSignalStore(currentProvideInfo, timers = globalThis) {
       publish(undefined, undefined)
       return
     }
-    const sync = () => publish(info.sessionId, source.getSnapshot())
+    const sync = () => {
+      if (activeBinding !== bindingRevision || disposed) return
+      publish(info.sessionId, source.getSnapshot())
+    }
     sessionOff = source.subscribe?.(sync)
     sync()
   }
@@ -86,6 +99,9 @@ export function createSignalStore(currentProvideInfo, timers = globalThis) {
   return {
     ...store,
     dispose() {
+      if (disposed) return
+      disposed = true
+      bindingRevision += 1
       currentOff?.()
       sessionOff?.()
       clearSuccess()

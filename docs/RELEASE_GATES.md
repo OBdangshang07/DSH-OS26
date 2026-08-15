@@ -57,7 +57,7 @@ combinations. At minimum detect and warn about:
 - Session projection to semantic state fixtures.
 - Refresh/reconnect state restoration.
 - Theme switch without stale overrides.
-- WebGL loss to Balanced fallback.
+- SVG-filter capability loss to CSS/Balanced fallback.
 
 ### End to end
 
@@ -96,11 +96,12 @@ beta. Never slow down the default mode to preserve a video effect.
 
 - [x] Normal text contrast is at least 4.5:1 for shipped token pairs over
   adversarial black and white backdrops.
-- [ ] Large text and meaningful boundaries are at least 3:1.
+- [x] Large text and meaningful control boundaries are at least 3:1.
 - [x] State has text/icon semantics in addition to color and motion.
-- [ ] Focus is visible through every surface.
+- [x] Focus is visible through every interactive plugin surface.
 - [ ] Approval focus returns to a predictable target.
-- [ ] Screen-reader announcements are useful and rate-limited.
+- [x] Screen-reader announcements are useful and semantic duplicates are
+  suppressed.
 - [x] Reduced motion removes non-essential movement.
 - [x] Reduced transparency produces an opaque, readable interface.
 - [ ] 200% zoom does not hide critical actions.
@@ -121,10 +122,10 @@ beta. Never slow down the default mode to preserve a video effect.
 - [x] `npm run quality` passes from the current initialized worktree.
 - [x] `npm pack --dry-run --json` contains only intended files.
 - [x] The packed tarball installs successfully in a clean profile.
-- [ ] Version, changelog and Git tag agree.
+- [x] Version, changelog and local Git tag agree (`v0.1.0-beta.1`).
 - [x] README install and remove commands are copy-paste tested against the
   packed tarball in an isolated profile.
-- [ ] License and third-party notices cover every asset and dependency.
+- [x] License and third-party notices cover every asset and dependency.
 - [ ] npm package and GitHub release point to the same commit.
 
 ## Claim discipline

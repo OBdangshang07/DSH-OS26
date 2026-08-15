@@ -26,10 +26,17 @@ do not advertise those paths as verified yet.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `0.1.0-rc.6` / `47f9438` | Chrome 151 / Edge 151 | Windows 11 | pass | pending | pending | pass | pass | [evidence](ACCEPTANCE_EVIDENCE.md) |
 
+The npm version and the repository default branch (`master`) were rechecked on
+2026-08-16: npm remained `0.1.0-rc.6` and the default-branch head remained
+`47f943859bef60e4160492346772ded9b24f765a`.
+
 ## Plugin coexistence
 
 Full-shell themes are conflicts unless explicitly proven otherwise. DSH-OS26
 will detect them and recommend enabling only one full-shell material plugin.
+The official theme snapshot exposes registered theme ids but not the source ids
+of token-only override layers. Therefore Settings always shows a compatibility
+notice, and names a conflicting registered theme when the API exposes one.
 
 | Plugin | Expected relation | Verified result |
 | --- | --- | --- |

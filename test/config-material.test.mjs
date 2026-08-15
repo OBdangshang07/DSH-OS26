@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { DEFAULT_CONFIG, createConfigStore, normalizeConfig } from '../src/client/config.js'
 import { compositeRgb, contrastRatio } from '../src/client/contrast.js'
-import { effectiveOpacity, materialTokens } from '../src/client/material.js'
+import { applyMaterialRoot, clearMaterialRoot, effectiveOpacity, materialTokens } from '../src/client/material.js'
 
 test('invalid or old settings migrate to safe bounded defaults', () => {
   const value = normalizeConfig({ quality: 'warp-speed', opacity: 999, blur: -5, customWallpaper: 'https://example.test/x' })
@@ -54,4 +54,22 @@ test('normal text stays WCAG AA over adversarial black and white backdrops', () 
     assert.ok(contrastRatio(lightText, lightBackground) >= 4.5)
     assert.ok(contrastRatio(darkText, darkBackground) >= 4.5)
   }
+})
+
+test('unsupported backdrop capability falls back and lifecycle cleanup removes all root state', () => {
+  const properties = new Map()
+  const root = {
+    dataset: {},
+    style: {
+      setProperty: (name, value) => properties.set(name, value),
+      removeProperty: name => properties.delete(name),
+    },
+  }
+  applyMaterialRoot(root, DEFAULT_CONFIG, { backdrop: false })
+  assert.equal(root.dataset.os26Backdrop, 'fallback')
+  assert.equal(root.dataset.dshOs26, 'on')
+  assert.ok(properties.size > 0)
+  clearMaterialRoot(root)
+  assert.deepEqual(root.dataset, {})
+  assert.equal(properties.size, 0)
 })

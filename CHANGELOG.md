@@ -7,7 +7,7 @@ also pre-stable.
 ## [Unreleased]
 
 - Credentialed real-turn and approval acceptance.
-- Remaining accessibility, visual and performance matrix.
+- Independent second-person install/accessibility review.
 - Published npm/GitHub provenance and launch video.
 
 ## [0.1.0-beta.1] - 2026-08-16
@@ -23,6 +23,18 @@ also pre-stable.
   enable/disable/uninstall lifecycle.
 - Automated contract/state/config/material tests and isolated-profile browser
   acceptance evidence.
+- Chrome/Edge theme, quality-tier, focus, viewport and effective-200%-layout
+  acceptance matrix.
+
+### Fixed
+
+- Duplicate session projections no longer collapse the completion receipt or
+  repeat screen-reader announcements.
+- Late callbacks from a previously active session can no longer overwrite the
+  newly selected session state.
+- Master disable now removes every private root material variable and stops
+  pointer optics updates.
+- Settings controls now have explicit high-contrast boundaries and focus rings.
 
 ### Security
 

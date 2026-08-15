@@ -20,9 +20,9 @@ UI after uninstalling it.
 | State | Seven semantic states with safety-first precedence and bounded completion receipt | Fixture/unit coverage passes; credentialed real-turn and approval branches still need recording |
 | Surfaces | Status capsule, composer dock, tool activity, approval/blocked attention and completion receipt | All seven render branches covered; native approval controls remain authoritative |
 | Material | Eco, Balanced and deterministic SVG Cinematic; light/dark/system; preset/local wallpaper | WCAG floor tests, reduced-transparency fallback and browser acceptance pass |
-| Settings | 14 native controls, bounded 2 MB local import, reset, conflict warning and privacy-safe diagnostics | Keyboard order and clean enable/disable pass in Chrome |
+| Settings | 14 native controls, bounded 2 MB local import, reset, conflict warning and privacy-safe diagnostics | Keyboard order, explicit focus rings and residue-free enable/disable pass in Chrome and Edge |
 | Operations | Pack/install, restart, legacy-config upgrade, disable, uninstall and stock recovery | Repeated against the real tarball in an isolated DSH/browser profile |
-| Performance | Zero runtime dependency, no external resource, no idle render loop in Eco | 37,819-byte client; about 1.20 MB conservative heap delta; no idle long task observed |
+| Performance | Zero runtime dependency, no external resource, no idle render loop in Eco | 39,341-byte client; about 1.20 MB conservative heap delta; no idle long task observed |
 | Publication | README, changelog, compatibility, claim rules, prior-art credit and video plan | Name currently clear; publication, second-person review and final real-flow video remain external gates |
 
 ## Scope

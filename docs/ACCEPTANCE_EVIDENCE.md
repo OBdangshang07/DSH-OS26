@@ -6,11 +6,11 @@ was modified and DSH telemetry was explicitly disabled for the run.
 ## Artifact
 
 - Built with Node `22.19.0` and npm `10.9.3`.
-- `npm run quality`: 22/22 automated tests pass.
+- `npm run quality`: 30/30 automated tests pass.
 - `npm audit`: 0 vulnerabilities in the plugin development tree.
-- Packed artifact: 15 declared files, about 31 kB packed / 84 kB unpacked.
-- Client bundle: 37,819 bytes / 11,594 bytes gzip, SHA-256
-  `dc00bd60b22edb0f99f3889c6f9c0f04e0f534ee279f3ecb33e1fb1d4dde92cb`.
+- Packed artifact: 16 declared files, about 32 kB packed / 87 kB unpacked.
+- Client bundle: 39,341 bytes / 12,087 bytes gzip, SHA-256
+  `82f3eb1e59efbd53fb3aa60a59401ebc1083ceeabf6ece010ca0925a72ffb16e`.
 - No bundled dependency, remote asset, credential read, telemetry or shell face.
 
 ## Official-profile acceptance
@@ -31,15 +31,18 @@ Baseline: `@deepseek-ai/dsh@0.1.0-rc.6`, source commit
    capsule and official token override; turning it on restored them.
 8. `dsh plugin --profile web remove dsh-os26` removed the package and bundle.
 9. The stock Web profile then booted and served HTTP 200 with no DSH-OS26 entry.
-10. Edge `151.0.4129.72` loaded the final artifact; Cinematic mounted its SVG
-    displacement filter and a 768×700 viewport at 2× device scale kept the
-    entire overlay inside the viewport.
-11. Chrome `151.0.7922.138` passed automated checks at 1920x1080, 1280x800
-    and 768x700, including reduced motion, reduced transparency, sequential
-    keyboard traversal of all 14 settings controls and zero page exceptions.
-12. The clean Chrome run produced no long task in a 2.5-second idle window;
-    whole-page script time was 1.909 ms and whole-page task time was 24.168 ms.
-13. After forced garbage collection, the plugin/settings page used about
+10. Chrome `151.0.7922.138` and Edge `151.0.4129.72` both loaded the exact
+    rebuilt client whose SHA-256 matched the installed profile copy.
+11. Both browsers passed light, dark and system palettes; Eco, Balanced and
+    Cinematic tiers; 1920x1080, 1440x900, 1280x800 and 768x700 layouts; reduced
+    motion/transparency; and zero page exceptions.
+12. All 14 Settings controls traversed in sequential Tab order and exposed a
+    2-3 px explicit focus ring. Both critical Settings actions stayed reachable
+    in a 720x450 effective-200%-layout emulation.
+13. The final Chrome idle window produced no long task; whole-page script time
+    was 3.273 ms and whole-page task time was 25.321 ms. Edge measured 0.025 ms
+    and 11.499 ms respectively in the same 2.5-second method.
+14. After forced garbage collection, the plugin/settings page used about
     1.20 MB more JS heap than a fresh stock page (a conservative upper bound,
     because the stock measurement did not mount Settings).
 
@@ -63,8 +66,9 @@ Chrome user-data directory across both package versions:
 
 - Credentialed real turn covering thinking → tool → result.
 - Real approval allow and deny, blocked question and tool-error paths.
-- Remaining manual focus-visibility, approval focus-return, screen-reader and
-  200% zoom checks around native approval controls.
+- Manual approval focus-return, screen-reader review and actual browser-zoom
+  checks around native approval controls (plugin-owned controls and effective
+  200% layout already pass automation).
 - macOS or Linux coverage before stable `0.1.0` (Windows is the beta baseline).
 - A second person's tarball install/uninstall review.
 - Name/prior-art audit repeated within 24 hours of publication.

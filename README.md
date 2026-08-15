@@ -82,6 +82,7 @@ differentiator is coordinated material feedback driven by real DSH Agent state.
 - [Video launch plan (Chinese)](docs/VIDEO_LAUNCH_PLAN.zh-CN.md)
 - [Name and prior-art audit](docs/NAME_AND_PRIOR_ART_AUDIT.md)
 - [Acceptance evidence](docs/ACCEPTANCE_EVIDENCE.md)
+- [Third-party notices](docs/THIRD_PARTY_NOTICES.md)
 - [Changelog](CHANGELOG.md)
 
 ## License
