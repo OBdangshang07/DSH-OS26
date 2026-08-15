@@ -2,6 +2,7 @@ import { build } from 'vite'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { normalizeLineEndings } from './text-normalization.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const outputPath = resolve(root, 'lib/client.js')
@@ -60,7 +61,7 @@ if (!chunk) throw new Error('Vite did not emit a client chunk.')
 
 if (checkOnly) {
   const current = await readFile(outputPath, 'utf8').catch(() => '')
-  if (current !== chunk.code) {
+  if (normalizeLineEndings(current) !== normalizeLineEndings(chunk.code)) {
     throw new Error('lib/client.js is missing or stale. Run npm run build.')
   }
 } else {
