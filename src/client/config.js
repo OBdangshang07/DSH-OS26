@@ -8,7 +8,7 @@ export const DEFAULT_CONFIG = Object.freeze({
   enabled: true,
   scheme: 'system',
   quality: 'balanced',
-  opacity: 58,
+  opacity: 68,
   blur: 24,
   saturation: 150,
   highlight: 64,
@@ -41,7 +41,7 @@ export function normalizeConfig(input) {
   for (const [key, values] of Object.entries(ENUMS)) {
     if (values.includes(source[key])) next[key] = source[key]
   }
-  next.opacity = numberIn(source.opacity, next.opacity, 20, 96)
+  next.opacity = numberIn(source.opacity, next.opacity, 65, 96)
   next.blur = numberIn(source.blur, next.blur, 0, 48)
   next.saturation = numberIn(source.saturation, next.saturation, 80, 220)
   next.highlight = numberIn(source.highlight, next.highlight, 0, 100)

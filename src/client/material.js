@@ -1,9 +1,15 @@
+import { relativeLuminance } from './contrast.js'
+
 const PRESET_LUMINANCE = { aurora: 0.22, ocean: 0.14, dusk: 0.11, none: 0.5, custom: 0.28 }
 
+export function effectiveOpacity(config, luminance = PRESET_LUMINANCE[config.wallpaper] ?? 0.28) {
+  if (config.opaque || config.quality === 'eco') return 0.94
+  const contrastFloor = luminance < 0.12 || luminance > 0.82 ? 0.72 : 0.65
+  return Math.max(config.opacity / 100, contrastFloor)
+}
+
 export function materialTokens(config, luminance = PRESET_LUMINANCE[config.wallpaper] ?? 0.28) {
-  const opaque = config.opaque || config.quality === 'eco'
-  const contrastFloor = luminance < 0.16 ? 0.68 : luminance < 0.3 ? 0.58 : 0.48
-  const alpha = opaque ? 0.94 : Math.max(config.opacity / 100, contrastFloor)
+  const alpha = effectiveOpacity(config, luminance)
   return {
     '--dsw-alias-bg-base': {
       light: `rgba(238, 245, 255, ${Math.min(0.97, alpha + 0.08)})`,
@@ -50,11 +56,7 @@ export function sampleWallpaperLuminance(dataUrl, environment = globalThis) {
         const pixels = context.getImageData(0, 0, 32, 32).data
         let total = 0
         for (let index = 0; index < pixels.length; index += 4) {
-          const channel = value => {
-            const normalized = value / 255
-            return normalized <= 0.04045 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4
-          }
-          total += channel(pixels[index]) * 0.2126 + channel(pixels[index + 1]) * 0.7152 + channel(pixels[index + 2]) * 0.0722
+          total += relativeLuminance([pixels[index], pixels[index + 1], pixels[index + 2]])
         }
         resolve(Math.min(1, Math.max(0, total / (pixels.length / 4))))
       } catch {
@@ -81,7 +83,7 @@ export function applyMaterialRoot(root, config, capabilities = {}) {
   root.dataset.os26Motion = config.motion
   root.dataset.os26Opaque = config.opaque ? 'true' : 'false'
   root.dataset.os26Backdrop = capabilities.backdrop === false ? 'fallback' : 'supported'
-  root.style.setProperty('--os26-opacity', String(config.opacity / 100))
+  root.style.setProperty('--os26-opacity', String(effectiveOpacity(config)))
   root.style.setProperty('--os26-blur', `${config.blur}px`)
   root.style.setProperty('--os26-saturation', `${config.saturation}%`)
   root.style.setProperty('--os26-highlight', String(config.highlight / 100))

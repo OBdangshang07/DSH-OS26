@@ -1,6 +1,6 @@
 import { ComposerDock, DiagnosticBadge, SettingsPanel, StatusOverlay } from './components.js'
 import { createConfigStore } from './config.js'
-import { applyMaterialRoot, clearMaterialRoot, materialTokens, sampleWallpaperLuminance } from './material.js'
+import { applyMaterialRoot, clearMaterialRoot, effectiveOpacity, materialTokens, sampleWallpaperLuminance } from './material.js'
 import { createSignalStore } from './state.js'
 import { OS26_STYLES } from './styles.js'
 
@@ -45,6 +45,7 @@ export function apply(ctx) {
         void sampleWallpaperLuminance(config.customWallpaper).then((luminance) => {
           if (currentGeneration !== generation) return
           root.style.setProperty('--os26-luminance', String(luminance))
+          root.style.setProperty('--os26-opacity', String(effectiveOpacity(config, luminance)))
           tokenOff?.()
           tokenOff = ctx.theme.overrideTokens(name, materialTokens(config, luminance))
         })

@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { DEFAULT_CONFIG, createConfigStore, normalizeConfig } from '../src/client/config.js'
-import { materialTokens } from '../src/client/material.js'
+import { compositeRgb, contrastRatio } from '../src/client/contrast.js'
+import { effectiveOpacity, materialTokens } from '../src/client/material.js'
 
 test('invalid or old settings migrate to safe bounded defaults', () => {
   const value = normalizeConfig({ quality: 'warp-speed', opacity: 999, blur: -5, customWallpaper: 'https://example.test/x' })
@@ -36,6 +37,21 @@ test('dark wallpapers raise the readable material fill floor', () => {
   const requested = { ...DEFAULT_CONFIG, opacity: 20, opaque: false, quality: 'balanced' }
   const dark = materialTokens(requested, 0.08)['--dsw-alias-bg-layer-1'].dark
   const light = materialTokens(requested, 0.7)['--dsw-alias-bg-layer-1'].dark
-  assert.match(dark, /0\.68/)
-  assert.match(light, /0\.48/)
+  assert.match(dark, /0\.72/)
+  assert.match(light, /0\.65/)
+})
+
+test('normal text stays WCAG AA over adversarial black and white backdrops', () => {
+  const config = { ...DEFAULT_CONFIG, opacity: 65, quality: 'balanced', opaque: false }
+  const lightText = [23, 33, 58]
+  const lightSurface = [255, 255, 255]
+  const darkText = [245, 248, 255]
+  const darkSurface = [19, 28, 48]
+  for (const wallpaperLuminance of [0, 0.11, 0.5, 0.9, 1]) {
+    const alpha = effectiveOpacity(config, wallpaperLuminance)
+    const lightBackground = compositeRgb(lightSurface, [0, 0, 0], alpha)
+    const darkBackground = compositeRgb(darkSurface, [255, 255, 255], alpha)
+    assert.ok(contrastRatio(lightText, lightBackground) >= 4.5)
+    assert.ok(contrastRatio(darkText, darkBackground) >= 4.5)
+  }
 })

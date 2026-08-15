@@ -1,6 +1,6 @@
 # Name and Prior-Art Audit
 
-Audit date: 2026-08-16. Exact-name check repeated at approximately 01:06 CST.
+Audit date: 2026-08-16. Exact-name check repeated at 01:43 CST (UTC+8).
 
 This is a discovery and branding check, not a legal trademark opinion.
 
@@ -22,10 +22,11 @@ Results at the audit time:
 - The unscoped npm package `dsh-os26` returned `E404` and appears available.
 - No npm package was returned for the exact `os26` search.
 
-The repeat check returned GitHub `total_count: 0` for both `DSH-OS26 in:name`
-and `dsh os26 in:name`; `npm view dsh-os26` still returned `E404`. A broad npm
-search returned unrelated packages using `dsh` as initials, not an OS26 or DSH
-visual-shell collision.
+The latest repeat check returned GitHub `total_count: 0` for all four queries:
+`DSH-OS26 in:name`, `dsh os26 in:name`, `os26 deepseek in:name,description`
+and `os26 harness in:name,description`. `npm view dsh-os26` still returned
+`E404`. A broad npm search returned unrelated packages using `dsh` as initials,
+not an OS26 or DSH visual-shell collision.
 
 Nearby names include `dsh-agent-os-*` repositories. They describe an Agent OS
 runtime, planner, scheduler and observability stack rather than a visual shell,

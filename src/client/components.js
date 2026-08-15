@@ -134,7 +134,7 @@ export function SettingsPanel({ configStore, diagnostics, compatibility }) {
       h(Select, { value: config.wallpaper, onChange: patch('wallpaper'), label: '壁纸' }, option('aurora', 'Aurora'), option('ocean', 'Ocean'), option('dusk', 'Dusk'), option('none', '无'), config.customWallpaper && option('custom', '本地自定义')),
       h('label', { className: 'os26-file-button' }, '导入本地壁纸', h('input', { type: 'file', accept: 'image/png,image/jpeg,image/webp', onChange: importWallpaper }))),
     h('fieldset', null, h('legend', null, '材质参数'),
-      h(Range, { value: config.opacity, onChange: patch('opacity'), label: '填充不透明度', min: 20, max: 96, unit: '%' }),
+      h(Range, { value: config.opacity, onChange: patch('opacity'), label: '填充不透明度', min: 65, max: 96, unit: '%' }),
       h(Range, { value: config.blur, onChange: patch('blur'), label: '模糊', min: 0, max: 48, unit: 'px' }),
       h(Range, { value: config.saturation, onChange: patch('saturation'), label: '饱和度', min: 80, max: 220, unit: '%' }),
       h(Range, { value: config.highlight, onChange: patch('highlight'), label: '高光', min: 0, max: 100, unit: '%' })),

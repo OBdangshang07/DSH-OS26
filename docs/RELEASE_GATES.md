@@ -94,14 +94,15 @@ beta. Never slow down the default mode to preserve a video effect.
 
 ## Accessibility gates
 
-- [ ] Normal text contrast is at least 4.5:1.
+- [x] Normal text contrast is at least 4.5:1 for shipped token pairs over
+  adversarial black and white backdrops.
 - [ ] Large text and meaningful boundaries are at least 3:1.
-- [ ] State has text/icon semantics in addition to color and motion.
+- [x] State has text/icon semantics in addition to color and motion.
 - [ ] Focus is visible through every surface.
 - [ ] Approval focus returns to a predictable target.
 - [ ] Screen-reader announcements are useful and rate-limited.
-- [ ] Reduced motion removes non-essential movement.
-- [ ] Reduced transparency produces an opaque, readable interface.
+- [x] Reduced motion removes non-essential movement.
+- [x] Reduced transparency produces an opaque, readable interface.
 - [ ] 200% zoom does not hide critical actions.
 
 ## Security and privacy gates
@@ -121,7 +122,8 @@ beta. Never slow down the default mode to preserve a video effect.
 - [x] `npm pack --dry-run --json` contains only intended files.
 - [x] The packed tarball installs successfully in a clean profile.
 - [ ] Version, changelog and Git tag agree.
-- [ ] README install and remove commands are copy-paste tested.
+- [x] README install and remove commands are copy-paste tested against the
+  packed tarball in an isolated profile.
 - [ ] License and third-party notices cover every asset and dependency.
 - [ ] npm package and GitHub release point to the same commit.
 
