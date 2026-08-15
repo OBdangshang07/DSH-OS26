@@ -726,7 +726,7 @@ export const OS26_STYLES = String.raw`
   isolation: isolate;
   border: 1px solid var(--os26-edge) !important;
   border-radius: 28px !important;
-  background: transparent !important;
+  background: var(--os26-modal-fill) !important;
   box-shadow: inset 0 1px rgba(255,255,255,.52), inset 0 -1px var(--os26-edge-dark), var(--os26-shadow-modal) !important;
   -webkit-backdrop-filter: blur(calc(var(--os26-blur) * 1.08)) saturate(var(--os26-saturation));
   backdrop-filter: blur(calc(var(--os26-blur) * 1.08)) saturate(var(--os26-saturation));
@@ -741,8 +741,7 @@ export const OS26_STYLES = String.raw`
   pointer-events: none;
   background:
     radial-gradient(circle at 16% -20%, rgba(255,255,255,.24), transparent 34%),
-    linear-gradient(145deg, rgba(255,255,255,.10), transparent 42%),
-    var(--os26-modal-fill) !important;
+    linear-gradient(145deg, rgba(255,255,255,.10), transparent 42%) !important;
 }
 
 :root[data-dsh-os26='on']:has([data-slot='sidebar.settings'] [role='presentation'] [role='dialog']) [data-composer-seat],
@@ -774,7 +773,7 @@ export const OS26_STYLES = String.raw`
   overflow: auto;
   border: 1px solid var(--os26-edge) !important;
   border-radius: 28px !important;
-  background: transparent !important;
+  background: var(--os26-modal-fill) !important;
   box-shadow: inset 0 1px rgba(255,255,255,.52), inset 0 -1px var(--os26-edge-dark), var(--os26-shadow-modal) !important;
   -webkit-backdrop-filter: blur(calc(var(--os26-blur) * 1.15)) saturate(var(--os26-saturation));
   backdrop-filter: blur(calc(var(--os26-blur) * 1.15)) saturate(var(--os26-saturation));
@@ -789,8 +788,7 @@ export const OS26_STYLES = String.raw`
   pointer-events: none;
   background:
     radial-gradient(circle at 16% -20%, rgba(255,255,255,.27), transparent 34%),
-    linear-gradient(145deg, rgba(255,255,255,.12), transparent 42%),
-    var(--os26-modal-fill);
+    linear-gradient(145deg, rgba(255,255,255,.12), transparent 42%);
   -webkit-backdrop-filter: blur(calc(var(--os26-blur) * .78)) saturate(var(--os26-saturation)) contrast(1.05);
   backdrop-filter: blur(calc(var(--os26-blur) * .78)) saturate(var(--os26-saturation)) contrast(1.05);
   filter: url('#os26-composer-refraction') saturate(1.04);

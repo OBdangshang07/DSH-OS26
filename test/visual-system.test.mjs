@@ -75,6 +75,7 @@ test('V2 includes overflow and narrow-layout safeguards', () => {
   assert.match(OS26_STYLES, /width: min\(960px, calc\(100vw - 24px\)\) !important/)
   assert.match(OS26_STYLES, /\[data-slot='sidebar\.settings'\] \[role='presentation'\]:has\(\.os26-settings\)/)
   assert.match(OS26_STYLES, /\[data-slot='sidebar\.settings'\] \[role='presentation'\] \{[\s\S]*?--os26-modal-scrim/)
+  assert.match(OS26_STYLES, /\[data-slot='sidebar\.settings'\] \[role='dialog'\] \{[\s\S]*?background: var\(--os26-modal-fill\) !important/)
   assert.match(OS26_STYLES, /:has\(\[data-slot='sidebar\.settings'\] \[role='presentation'\] \[role='dialog'\]\) \[data-composer-seat\]/)
   assert.match(OS26_STYLES, /data-os26-quality='eco'[\s\S]*?\[data-slot='sidebar\.settings'\] \[role='dialog'\]/)
 })

@@ -8,9 +8,9 @@ was modified and DSH telemetry was explicitly disabled for the run.
 - Built with Node `22.19.0` and npm `10.9.3`.
 - `npm run quality`: 48/48 automated tests pass.
 - `npm audit`: 0 vulnerabilities in the plugin development tree.
-- Packed artifact: 18 declared files, about 54.2 kB packed / 172.6 kB unpacked.
-- Client bundle: 95,894 bytes / 21,355 bytes gzip, SHA-256
-  `a7e1f1137cbf23db29bbc9c5aff6a1370568e77e4f3ec96cecf465feda2c74de`.
+- Packed artifact: 18 declared files, about 54.4 kB packed / 173.2 kB unpacked.
+- Client bundle: 95,860 bytes / 21,356 bytes gzip, SHA-256
+  `042b6ef3be150530ea235642b76743f01285a674bff53f0a80e77d27b4e75c13`.
 - No bundled dependency, remote asset, credential read, telemetry or shell face.
 
 ## Official-profile acceptance
@@ -92,13 +92,22 @@ its SHA-256 matched the worktree bundle above.
     composer remained the post-decision focus target in the approval, question
     and plan-review flows above.
 13. Native Settings used a 28 px modal surface over a dimmed, blurred scrim.
-    While it was open, the underlying composer and agent-status overlay both
-    had zero opacity and hidden visibility, so no input field leaked through
-    the dialog.
+    The opaque-readable base now lives on the dialog itself instead of only a
+    negative-z-index optical layer. While Settings was open, the underlying
+    composer and agent-status overlay both had zero opacity and hidden
+    visibility, so no input field or conversation text leaked through.
 14. Sidebar session rows used a 15 px radius, workspace/group rows used 10 px,
     and the selected session used a neutral glass highlight with a narrow focus
     marker. Long Chinese, English and path labels produced zero row or tree
     overflow.
+15. A supplemental Edge run used real browser keyboard accelerators: `Ctrl+0`
+    followed by five `Ctrl++` presses changed `devicePixelRatio` from 1 to 2
+    and the CSS viewport from 1440x900 to 720x450. The composer remained inside
+    the viewport with zero horizontal overflow. After scrolling the real
+    Settings container from 0 to 844 px, both critical actions were visible
+    and usable. This catches browser-zoom compositing defects, but it does not
+    replace the required human screenshot containing browser chrome or the
+    screen-reader/keyboard sign-off.
 
 ## Upgrade and rollback proof
 
@@ -123,7 +132,8 @@ Chrome user-data directory across both package versions:
   effective-200%-layout automation already pass).
 - macOS or Linux coverage before stable `0.1.0` (Windows is the beta baseline).
 - A second person's tarball install/uninstall review.
-- Name/prior-art audit repeated within 24 hours of publication.
+- Repeat the name/prior-art audit again if publication occurs after
+  2026-08-17 06:44 CST (UTC+8).
 - Video recorded from the finally published tarball.
 
 These pending items are deliberately visible. Passing package boot does not

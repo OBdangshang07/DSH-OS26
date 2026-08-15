@@ -423,13 +423,12 @@ try {
     const status = document.querySelector('.os26-overlay-stack')
     if (!dialog || !presentation || !composer) return null
     const dialogStyle = getComputedStyle(dialog)
-    const dialogLens = getComputedStyle(dialog, '::before')
     const presentationStyle = getComputedStyle(presentation)
     const composerStyle = getComputedStyle(composer)
     const statusStyle = status ? getComputedStyle(status) : null
     return {
       dialogRadius: dialogStyle.borderTopLeftRadius,
-      dialogFill: dialogLens.backgroundColor,
+      dialogFill: dialogStyle.backgroundColor,
       scrim: presentationStyle.backgroundColor,
       scrimBackdrop: presentationStyle.backdropFilter || presentationStyle.webkitBackdropFilter,
       composerVisibility: composerStyle.visibility,
@@ -440,6 +439,7 @@ try {
   })()`)
   assert(nativeSettingsIsolation
     && Number.parseFloat(nativeSettingsIsolation.dialogRadius) >= 24
+    && nativeSettingsIsolation.dialogFill !== 'rgba(0, 0, 0, 0)'
     && nativeSettingsIsolation.scrim !== 'rgba(0, 0, 0, 0)'
     && nativeSettingsIsolation.scrimBackdrop !== 'none'
     && nativeSettingsIsolation.composerVisibility === 'hidden'
