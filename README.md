@@ -24,11 +24,13 @@ approvals condense, failures disturb the surface, and completed work settles.
 - no network calls, telemetry, credential access, shell execution or DSH source
   patching.
 
-The public beta has **not been published yet**. Packed-artifact browser
+The source and `v0.1.0-beta.1` candidate tag are public, but the npm beta and
+GitHub Release have **not been published yet**. Packed-artifact browser
 automation and real agent, approval, question and plan-review flows have passed
-on the Windows beta baseline. Actual browser Ctrl+ 200% zoom, a real
-screen-reader pass and an independent human install/uninstall review remain
-release gates; see [acceptance evidence](docs/ACCEPTANCE_EVIDENCE.md).
+on the Windows beta baseline. A real `Ctrl++` automation supplement reaches
+200%, but the required browser-chrome screenshot, real screen-reader pass and
+independent human install/uninstall review remain release gates; see
+[acceptance evidence](docs/ACCEPTANCE_EVIDENCE.md).
 
 ## Development
 

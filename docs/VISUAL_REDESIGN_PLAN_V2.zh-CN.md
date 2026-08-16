@@ -253,10 +253,10 @@ V2 可只在 `:root[data-dsh-os26='on']` 下使用这些属性，避免 hashed c
 本节只记录已经取得的证据，不降低各 Phase 的退出条件：
 
 - Phase 1–4 的主要实现已进入发布候选包：Composer、按钮、toggle、select、slider、侧栏、模式菜单、工具卡、目标条、审批、问题与计划审阅使用统一分层玻璃体系；正文、代码和 Diff 保持阅读面。
-- 文字溢出、稳定语义钩子、关闭清理、reduced-motion、reduced-transparency、Eco 与无 `backdrop-filter` 回退均已有自动化覆盖；当前测试为 47/47。
+- 文字溢出、稳定语义钩子、关闭清理、reduced-motion、reduced-transparency、Eco 与无 `backdrop-filter` 回退均已有自动化覆盖；当前测试为 48/48。
 - 最终安装包上的真实 agent、审批允许/拒绝、用户问题与计划审阅流程已经通过；原生决策面消失后焦点回到 Composer，浏览器 AX Tree 的 heading/radio/button/checked/disabled 语义通过。
 - 1440/1280/768 等布局及 effective-200% 布局自动化已通过，但不能替代实际浏览器 Ctrl+ 200% 人工检查。
-- Phase 6 尚未完成：真实屏幕阅读器、第二位使用者独立安装/任务/卸载、发布前 24 小时撞名复查、最终包录屏以及 npm/GitHub 发布仍是明确门禁。
+- 发布前 24 小时撞名复查、公开 GitHub 源码与候选标签已经完成；Phase 6 仍缺真实屏幕阅读器、第二位使用者独立安装/任务/卸载和最终包录屏，npm beta 与 GitHub Release 继续受门禁保护。
 
 ## 自动化验收矩阵
 

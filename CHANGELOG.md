@@ -6,7 +6,6 @@ also pre-stable.
 
 ## [Unreleased]
 
-- Credentialed real-turn and approval acceptance.
 - Independent second-person install/accessibility review.
 - Published npm/GitHub provenance and launch video.
 
@@ -25,6 +24,8 @@ also pre-stable.
   acceptance evidence.
 - Chrome/Edge theme, quality-tier, focus, viewport and effective-200%-layout
   acceptance matrix.
+- Installed-package real turns, approval allow/deny, Question and Plan Review
+  acceptance, including focus restoration and accessibility-tree evidence.
 - A deterministic offline video fixture, cross-platform CI, manually gated
   release-candidate packaging and provenance-ready npm publishing workflow.
 
@@ -37,6 +38,11 @@ also pre-stable.
 - Master disable now removes every private root material variable and stops
   pointer optics updates.
 - Settings controls now have explicit high-contrast boundaries and focus rings.
+- The composer remains pinned to the conversation viewport while scrolling.
+- Settings now isolate the underlying composer and use a dialog-owned readable
+  material base, including at real browser 200% zoom.
+- Generated-bundle freshness checks normalize line endings across Windows and
+  Linux CI.
 
 ### Security
 
@@ -44,5 +50,4 @@ also pre-stable.
   access.
 - No proprietary Apple/DeepSeek assets or source patches.
 
-Comparison links will be added when the public repository URL is known; no
-placeholder URL is shipped as an install instruction.
+[0.1.0-beta.1]: https://github.com/OBdangshang07/DSH-OS26/tree/v0.1.0-beta.1

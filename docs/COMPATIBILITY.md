@@ -8,8 +8,10 @@ versions and evidence during each release candidate.
 `0.1.0-beta.1` has completed packed-tarball install, real browser load,
 enable/disable, uninstall and stock-profile recovery in an isolated profile.
 Real agent turns, approval allow/deny, user questions and plan review have all
-passed against the installed tarball. Actual browser Ctrl+ 200% zoom, manual
-screen-reader review and second-person install/uninstall remain human gates.
+passed against the installed tarball. A supplemental real `Ctrl++` run reached
+200% and caught/fixed a modal-compositing defect; browser-chrome screenshot,
+manual screen-reader review and second-person install/uninstall remain human
+gates.
 
 ## Development baseline
 
@@ -55,6 +57,6 @@ notice, and names a conflicting registered theme when the API exposes one.
   WebGL; unsupported filters fall back to Balanced rendering.
 - Plugin conflict detection currently warns for a non-built-in active theme;
   it does not disable another plugin automatically.
-- macOS/Linux, actual browser Ctrl+ 200%, manual assistive-technology review,
-  second-person review and final-tarball video capture remain release blockers,
-  not implied support.
+- macOS/Linux, human-confirmed browser Ctrl+ 200% with browser chrome, manual
+  assistive-technology review, second-person review and final-tarball video
+  capture remain release blockers, not implied support.
